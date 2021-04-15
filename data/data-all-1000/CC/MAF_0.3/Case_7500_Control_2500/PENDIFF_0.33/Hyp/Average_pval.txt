@@ -1,0 +1,6 @@
+MAF Samp_Size CC_Ratio Baseline Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.3 10000 3 0.33 Hyp Additive 5.2469e-21 1.58435e-19 1 1000 5.2469e-21 1.58435e-19 1 1000
+0.3 10000 3 0.33 Hyp Codominant 8.6845e-19 2.58832e-17 1 1000 8.6845e-19 2.58832e-17 1 1000
+0.3 10000 3 0.33 Hyp Dominant 2.30392e-17 4.38614e-16 1 1000 2.30392e-17 4.38614e-16 1 1000
+0.3 10000 3 0.33 Hyp Recessive 0.000141942 0.00166753 1 1000 0.000141942 0.00166753 1 1000
+0.3 10000 3 0.33 Hyp Weighted 1.25704e-18 3.9717e-17 1 1000 1.25704e-18 3.9717e-17 1 1000

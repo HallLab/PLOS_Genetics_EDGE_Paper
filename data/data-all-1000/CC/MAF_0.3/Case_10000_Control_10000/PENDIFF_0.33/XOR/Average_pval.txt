@@ -1,0 +1,6 @@
+MAF Samp_Size CC_Ratio Baseline Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.3 20000 2 0.33 XOR Additive 5.79014e-25 1.52203e-23 1 1000 5.79014e-25 1.52203e-23 1 1000
+0.3 20000 2 0.33 XOR Codominant 0 0 1 1000 0 0 1 1000
+0.3 20000 2 0.33 XOR Dominant 0 0 1 1000 0 0 1 1000
+0.3 20000 2 0.33 XOR Recessive 0.019886 0.0670204 0.898 1000 0.019886 0.0670204 0.898 1000
+0.3 20000 2 0.33 XOR Weighted 0 0 1 1000 0 0 1 1000
