@@ -1,0 +1,301 @@
+#!/bin/bash
+
+####### RITCHIELAB PBS TEMPLATE FILE
+#
+# Make a copy this script to use as the basis for your own script.
+#
+# Most of the available PBS options are described below, with a default
+# or example setting.  Lines starting with "##PBS" are ignored; to enable
+# them, remove the second #.
+#
+# Put your own job commands inside the marked off section near the bottom,
+# leaving the commands above and below it in place.  In order to avoid an
+# excessive IO burden on the network filesystem, it is best to copy your
+# input data to the provided ${TMPDIR}, generate any output there, and then
+# copy the final results back to the group directory.
+
+
+####### user-assigned job name; avoid special characters besides _.-
+#PBS -N interact_sim
+
+####### email address to send notifications to: user@host[,user@host[...]]
+#PBS -M jrw32@psu.edu
+
+####### types of email notifications to send: [a]bort, [b]egin, [e]nd, [n]one
+#PBS -m bae
+
+####### restart job from the beginning if it crashes (will overwrite previous output!): [y]es, [n]o
+##PBS -r y
+
+####### special queue name (we have "lionxf-mdr23" on LionXF only)
+####### leave this out to let our qsub wrapper detect and use any available priority queue
+##PBS -q queuename
+
+####### run as an array job with these (numeric) ID numbers
+#PBS -t 0-6155
+
+####### Allow others in the group to see the output
+#PBS -W umask=0027
+
+####### Throttle jobs by using a virtual resource (LionXF ONLY)
+####### N can be any of 1,2,3,4,5
+####### M is the amount of capacity to consume per job (max capacity is 1000)
+##PBS -l gres=ritchielab_N:M
+
+####### number of cluster nodes and/or processors to use (ACCRE:always append ":x86")
+#######   "nodes=X:ppn=Y"  for Y cores each on X different nodes
+#######   "nodes=X"        for X cores on any (or the same) node
+#PBS -l nodes=1
+
+####### maximum per-job memory (total shared by all cores/nodes)
+#PBS -l mem=1gb
+
+####### maximum per-core memory
+#PBS -l pmem=1gb
+
+####### maximum job execution time (real time, not just CPU time): DD:HH:MM:SS
+#PBS -l walltime=8:00:00
+
+####### output filename (default:"<script.pbs>.o<jobid>")
+##PBS -o output.file
+
+####### combine output streams: std[o]ut, std[e]rr
+#PBS -j oe
+
+####### these env vars are available when the job runs:
+#######   PBS_JOBNAME    user-assigned job name as provided at submission
+#######   PBS_O_HOST     name of the host on which qsub was run
+#######   PBS_O_LOGNAME  name of user who submitted the job
+#######   PBS_O_HOME     absolute path of the home directory of the user who submitted the job
+#######   PBS_O_WORKDIR  absolute path from which the job was submitted
+#######   PBS_O_QUEUE    name of the scheduling queue to which the job was submitted
+#######   PBS_SERVER     name of the host to which qsub submitted the job
+#######   PBS_QUEUE      name of the scheduling queue from which the job is being run
+#######   PBS_JOBID      unique job number assigned by the scheduler
+#######   PBS_NODEFILE   filename containing the names of nodes assigned to the job
+#######   PBS_ARRAYID    array identifier for this sub-job within an array job
+#######   TMPDIR         absolute path of temp directory on the assigned node's local disk (not GPFS) -- not provided by ACCRE!
+
+# build PBS_BASEID from PBS_JOBID (minus array/queue labels) and PBS_QUEUE
+PBS_BASEID=$(echo "${PBS_JOBID}" | grep -Po "^[0-9]+")
+if [[ -z "${PBS_BASEID}" ]]; then echo "ERROR: unable to identify PBS_BASEID from PBS_JOBID '${PBS_JOBID}'"; exit 1; fi
+PBS_BASEID="${PBS_BASEID}.${PBS_QUEUE}"
+
+# create a temp directory in $TMPDIR if provided, otherwise /tmp or ~/group/tmp
+for d in "${TMPDIR}" "/tmp" "${RITCHIELAB_GROUP_DIR}/tmp"; do
+	TMPDIR="${d}/ritchie_lab.pbstmp.${PBS_JOBID}"
+	[[ -d "${d}" ]] && mkdir "${TMPDIR}" && break
+done
+if [[ ! -d "${TMPDIR}" ]]; then echo "ERROR: unable to create temp directory in \$TMPDIR, '/tmp' or '~/group/tmp'"; exit 1; fi
+
+# PBS always starts scripts in $HOME but most folks expect the script to run in the directory it was submitted from
+cd "${PBS_O_WORKDIR}"
+
+####### v---- JOB COMMANDS BELOW ----v
+
+#set -x
+
+declare -A EFFECT
+EFFECT[REC]="0,0,1"
+EFFECT[SUB]="0,0.25,1"
+EFFECT[ADD]="0,0.5,1"
+EFFECT[SUP]="0,0.75,1"
+EFFECT[DOM]="0,1,1"
+EFFECT[HET]="0,1,0"
+
+
+declare -A MODEL
+
+NAMES=(${!EFFECT[@]})
+N_NAMES=${#NAMES[@]}
+for i in $(seq 0 $((N_NAMES -1)) ); do
+	for j in $(seq $i $((N_NAMES -1)) ); do
+		MODEL["${NAMES[$i]}_x_${NAMES[$j]}"]="--model 0,0,1 --eff1 ${EFFECT[${NAMES[$i]}]} --eff2 ${EFFECT[${NAMES[$j]}]}"
+	done
+done
+
+declare -A PENTABLE
+PENTABLE[HR-HR]="1,0,0,0,0,0,0,0,0"
+PENTABLE[HR-HET]="0,1,0,0,0,0,0,0,0"
+PENTABLE[HR-HA]="0,0,1,0,0,0,0,0,0"
+PENTABLE[HET-HET]="0,0,0,0,1,0,0,0,0"
+PENTABLE[HET-HA]="0,0,0,0,0,1,0,0,0"
+PENTABLE[XOR]="1,0,1,0,1,0,1,0,1"
+PENTABLE[Hyp]="0,.5,1,.5,.5,.5,1,.5,0"
+PENTABLE[RHyp]="1,.5,0,.5,.5,.5,0,.5,1"
+
+PENNAMES=(${!PENTABLE[@]})
+N_PENNAMES=${#PENNAMES[@]}
+for i in $(seq 0 $((N_PENNAMES - 1)) ); do
+	MODEL["${PENNAMES[$i]}"]="--penetrance=${PENTABLE[${PENNAMES[$i]}]}"
+done
+
+for i in $(seq 0 $((N_NAMES-1)) ); do
+	for j in $(seq $i $((N_NAMES -1)) ); do
+		MODEL["${NAMES[$i]}_+_${NAMES[$j]}"]="--model 1,1,0 --eff1 ${EFFECT[${NAMES[$i]}]} --eff2 ${EFFECT[${NAMES[$j]}]}"
+	done
+done
+
+
+for i in $(seq 0 $((N_NAMES -1)) ); do
+	MODEL["${NAMES[$i]}"]="--model 1,0,0 --eff1 ${EFFECT[${NAMES[$i]}]}"
+done
+
+MODEL["NULL"]="--model 0.5,0,0,0"
+
+MODNAMES=(${!MODEL[@]})
+N_MODEL=${#MODNAMES[@]}
+
+MAF=(0.05 0.1 0.3 0.5) 
+CASE_RATIO=(1 2 3)
+SAMP_SIZE=(2000 10000 20000)
+PENDIFF=(0.25 0.45 0.33) 
+
+# Please pass N_ITER=# to get other than 1K replicates
+if [ -z "$N_ITER" ]; then
+	N_ITER=1000
+fi
+
+MAP_FN="/gpfs/group1/m/mdr23/projects/simulation_encoding/data.map"
+OUTPUT_PATH="/gpfs/group1/m/mdr23/projects/simulation_encoding/data-all-$N_ITER"
+COMPLETION_FN="${OUTPUT_PATH}/completed.txt"
+touch $COMPLETION_FN
+
+
+
+# Please pass QUANT=1 on the cmd line to get quantitative traits
+if [ -z "$QUANT" ]; then
+	QUANT=0
+fi
+
+PLATO_TEST="logistic"
+PLATO_ARGS="--control0"
+
+if test "$QUANT" -ne 0; then
+	PLATO_TEST="linear"
+	PLATO_ARGS="--quant"
+	OUTPUT_PATH="${OUTPUT_PATH}/quant"
+else
+	OUTPUT_PATH="${OUTPUT_PATH}/CC"
+fi
+
+# N_MAF is the number of elements in the array "MAF"
+N_MAF=${#MAF[@]}
+N_CASE_RATIO=${#CASE_RATIO[@]}
+N_SAMP_SIZE=${#SAMP_SIZE[@]}
+N_PENDIFF=${#PENDIFF[@]}
+
+MAF_IDX=$((PBS_ARRAYID % N_MAF))
+NEW_IDX=$((PBS_ARRAYID / N_MAF))
+
+CASE_RATIO_IDX=$((NEW_IDX % N_CASE_RATIO))
+NEW_IDX=$((NEW_IDX / N_CASE_RATIO))
+
+SAMP_SIZE_IDX=$((NEW_IDX % N_SAMP_SIZE))
+NEW_IDX=$((NEW_IDX / N_SAMP_SIZE))
+
+PENDIFF_IDX=$((NEW_IDX % N_PENDIFF))
+MODEL_IDX=$((NEW_IDX / N_PENDIFF))
+
+N_CASE=$((SAMP_SIZE[SAMP_SIZE_IDX] * CASE_RATIO[CASE_RATIO_IDX] / 4))
+N_CONTROL=$((SAMP_SIZE[SAMP_SIZE_IDX] - N_CASE))
+
+# Set the output path
+OUTPUT_PATH="${OUTPUT_PATH}/MAF_${MAF[$MAF_IDX]}/Case_${N_CASE}_Control_${N_CONTROL}/PENDIFF_${PENDIFF[PENDIFF_IDX]}"
+
+# Tack on the model
+OUTPUT_PATH="${OUTPUT_PATH}/${MODNAMES[$MODEL_IDX]}"
+
+SIM_ARGS="--maf1=${MAF[$MAF_IDX]} --maf2=${MAF[$MAF_IDX]} --case=$N_CASE --control=$N_CONTROL --pendiff ${PENDIFF[PENDIFF_IDX]}"
+SIM_ARGS="$SIM_ARGS ${MODEL[${MODNAMES[$MODEL_IDX]}]}"
+
+if test ! -d "$OUTPUT_PATH"; then
+	mkdir -p "$OUTPUT_PATH"
+fi
+ 
+CM_FN=$(mktemp)
+TMP_OUTDIR=$(mktemp -d)
+
+cd $TMP_OUTDIR
+
+for i in $(seq 1 $N_ITER); do
+plato-nightly -f /dev/null load-data --map "$MAP_FN" --ped <(/gpfs/group1/m/mdr23/projects/simulation_encoding/sim_updated.R $SIM_ARGS) --no-sex --no-parents --no-fid --map3 --map-ref --map-alt $PLATO_ARGS \
+$PLATO_TEST --output "${TMP_OUTDIR}/add.$i.txt" --pairwise --interactions --encoding a \
+$PLATO_TEST --output "${TMP_OUTDIR}/dom.$i.txt" --pairwise --interactions --encoding d \
+$PLATO_TEST --output "${TMP_OUTDIR}/rec.$i.txt" --pairwise --interactions --encoding r \
+$PLATO_TEST --output "${TMP_OUTDIR}/codom.$i.txt" --pairwise --interactions --encoding c \
+$PLATO_TEST --output "${TMP_OUTDIR}/weight.$i.txt" --pairwise --interactions --encoding w
+
+PLATO_CODE=$?
+if test $PLATO_CODE -ne 0; then
+	echo "ERROR: PLATO exited with non-zero exit code; abandoning the simulation"
+	exit $PLATO_CODE
+fi
+
+IS_CONV=1
+
+for f in *.$i.txt; do
+	OUT_FN="${OUTPUT_PATH}/$(echo $f | sed -e 's|.*/||' -e 's/\..*/.txt/')"
+	if test $i -eq 1; then
+		head -1 $f > ${OUT_FN}
+	fi
+	paste <(echo $i) <(tail -n+2 $f | cut -f2-) >> ${OUT_FN}
+	
+	if test $QUANT -eq 0 -a $(tail -n+2 $f | cut -f10 | grep '1' | wc -l) -eq 0; then
+		IS_CONV=0
+	fi
+done
+
+# If all encodings converged, print this to a file
+if test $IS_CONV -ne 0; then
+	echo $i >> $CM_FN; 
+fi
+done
+
+cd -
+
+ALL_PVAL_F=$(mktemp)
+INDIV_PVAL_F=$(mktemp)
+
+PVAL_F="${OUTPUT_PATH}/Average_pval.txt"
+
+declare -A ENCODE_NAME
+ENCODE_NAME[add]="Additive"
+ENCODE_NAME[dom]="Dominant"
+ENCODE_NAME[rec]="Recessive"
+ENCODE_NAME[codom]="Codominant"
+ENCODE_NAME[weight]="Weighted"
+
+echo -n "MAF Samp_Size CC_Ratio Baseline Model " > "$PVAL_F"
+HDR="${MAF[$MAF_IDX]} ${SAMP_SIZE[$SAMP_SIZE_IDX]} ${CASE_RATIO[$CASE_RATIO_IDX]} ${PENDIFF[PENDIFF_IDX]} ${MODNAMES[$MODEL_IDX]}"
+
+if test $QUANT -eq 0; then
+	echo "Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv"	 >> "$PVAL_F"
+else
+	echo "Encoding Avg_pval SE_pval Power" >> "$PVAL_F"
+fi
+
+for enc in "${!ENCODE_NAME[@]}"; do
+
+	if test $QUANT -eq 0; then
+		paste -d' ' <(echo "${ENCODE_NAME[$enc]}") <(tail -n+2 "${OUTPUT_PATH}/$enc.txt" | awk 'BEGIN{sum=0;nonconv=0;sumsq=0;pwr=0} {if($10!=0){sum+=$(NF);sumsq+=$(NF)*$(NF);pwr+=($(NF)<0.05)}else{nonconv+=1} } END {if(NR-nonconv==0){print 1,0,0,0} else {print sum/ (NR-nonconv), sqrt(sumsq/(NR-nonconv) - (sum/(NR-nonconv))**2), pwr/(NR-nonconv), NR-nonconv}}') >> $INDIV_PVAL_F
+		paste -d' ' <(echo "${ENCODE_NAME[$enc]}") <(join -j1 <(sort $CM_FN) <(tail -n+2 "${OUTPUT_PATH}/$enc.txt" | sort -k1,1) | awk 'BEGIN{sum=0;nonconv=0;sumsq=0;pwr=0} {if($10!=0){sum+=$(NF);sumsq+=$(NF)*$(NF);pwr+=($(NF)<0.05)}else{nonconv+=1} } END {if(NR-nonconv==0){print 1,0,0,0} else {print sum/ (NR-nonconv), sqrt(sumsq/(NR-nonconv) - (sum/(NR-nonconv))**2), pwr/(NR-nonconv), NR-nonconv}}') >> $ALL_PVAL_F
+	else
+		paste -d' '  <(echo $HDR) <(echo "${ENCODE_NAME[$enc]}") <(tail -n+2 "${OUTPUT_PATH}/$enc.txt" | awk 'BEGIN{sum=0;sumsq=0;pwr=0} {sum+=$(NF);sumsq+=$(NF)*$(NF);pwr+=($(NF)<0.05)} END {print "Additive", sum/NR, sqrt(sumsq/NR - (sum/NR)**2), pwr/NR}')
+	fi
+
+	gzip -f ${OUTPUT_PATH}/$enc.txt
+done
+
+if test $QUANT -eq 0; then
+	join -j1 <(sort -k1,1 $ALL_PVAL_F) <(sort -k1,1 $INDIV_PVAL_F) | sed "s/^/$HDR /" >> "$PVAL_F"
+fi
+
+echo $PBS_ARRAYID >> $COMPLETION_FN
+
+####### ^---- JOB COMMANDS ABOVE ----^
+
+# clean up TMPDIR (but preserve previous exit code)
+CODE=$?
+rm -rf "${TMPDIR}"
+exit $CODE
