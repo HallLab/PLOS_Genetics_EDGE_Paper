@@ -1,0 +1,6 @@
+MAF Samp_Size CC_Ratio Baseline Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.5 10000 1 0.33 REC_x_REC Additive 1.1998e-11 2.07619e-10 1 1000 1.1998e-11 2.07619e-10 1 1000
+0.5 10000 1 0.33 REC_x_REC Codominant 6.89867e-21 1.21523e-19 1 1000 6.89867e-21 1.21523e-19 1 1000
+0.5 10000 1 0.33 REC_x_REC Dominant 0.255835 0.281066 0.31 1000 0.255835 0.281066 0.31 1000
+0.5 10000 1 0.33 REC_x_REC Recessive 3.59062e-23 7.17946e-22 1 1000 3.59062e-23 7.17946e-22 1 1000
+0.5 10000 1 0.33 REC_x_REC Weighted 4.41299e-20 1.37294e-18 1 1000 4.41299e-20 1.37294e-18 1 1000

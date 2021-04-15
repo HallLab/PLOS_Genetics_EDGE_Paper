@@ -1,0 +1,6 @@
+MAF Samp_Size CC_Ratio Baseline Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.5 20000 1 0.33 RHyp Additive 2.68629e-76 8.25257e-75 1 1000 2.68629e-76 8.25257e-75 1 1000
+0.5 20000 1 0.33 RHyp Codominant 8.26178e-74 2.44861e-72 1 1000 8.26178e-74 2.44861e-72 1 1000
+0.5 20000 1 0.33 RHyp Dominant 1.66509e-30 2.90999e-29 1 1000 1.66509e-30 2.90999e-29 1 1000
+0.5 20000 1 0.33 RHyp Recessive 1.1936e-29 3.57047e-28 1 1000 1.1936e-29 3.57047e-28 1 1000
+0.5 20000 1 0.33 RHyp Weighted 0.0819876 0.209443 0.815 1000 0.0819876 0.209443 0.815 1000

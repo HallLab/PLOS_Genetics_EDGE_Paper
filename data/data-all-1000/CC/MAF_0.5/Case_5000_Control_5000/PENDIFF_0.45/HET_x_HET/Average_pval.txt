@@ -1,0 +1,6 @@
+MAF Samp_Size CC_Ratio Baseline Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.5 10000 2 0.45 HET_x_HET Additive 0.505591 0.281527 0.04 1000 0.505591 0.281527 0.04 1000
+0.5 10000 2 0.45 HET_x_HET Codominant 1.75264e-83 5.3452e-82 1 1000 1.75264e-83 5.3452e-82 1 1000
+0.5 10000 2 0.45 HET_x_HET Dominant 4.93402e-09 7.76753e-08 1 1000 4.93402e-09 7.76753e-08 1 1000
+0.5 10000 2 0.45 HET_x_HET Recessive 2.40886e-08 6.45972e-07 1 1000 2.40886e-08 6.45972e-07 1 1000
+0.5 10000 2 0.45 HET_x_HET Weighted 0 0 1 1000 0 0 1 1000

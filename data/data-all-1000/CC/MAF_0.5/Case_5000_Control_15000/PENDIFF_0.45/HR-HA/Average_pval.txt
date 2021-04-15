@@ -1,0 +1,6 @@
+MAF Samp_Size CC_Ratio Baseline Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.5 20000 1 0.45 HR-HA Additive 1.92794e-41 5.47662e-40 1 1000 1.92794e-41 5.47662e-40 1 1000
+0.5 20000 1 0.45 HR-HA Codominant 0 0 1 1000 0 0 1 1000
+0.5 20000 1 0.45 HR-HA Dominant 5.98874e-09 1.45031e-07 1 1000 5.98874e-09 1.45031e-07 1 1000
+0.5 20000 1 0.45 HR-HA Recessive 2.67803e-09 3.82247e-08 1 1000 2.67803e-09 3.82247e-08 1 1000
+0.5 20000 1 0.45 HR-HA Weighted 0 0 1 1000 0 0 1 1000
