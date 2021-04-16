@@ -1,0 +1,6 @@
+MAF Samp_Size CC_Ratio Baseline Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.05 20000 1 0.45 SUP_x_HET Additive 3.71584e-10 5.99723e-09 1 433 1.89359e-09 4.7461e-08 1 1000
+0.05 20000 1 0.45 SUP_x_HET Codominant 3.23464e-10 2.81981e-09 1 433 3.22719e-10 2.8166e-09 1 434
+0.05 20000 1 0.45 SUP_x_HET Dominant 5.46573e-11 8.84194e-10 1 433 4.02346e-10 1.18455e-08 1 1000
+0.05 20000 1 0.45 SUP_x_HET Recessive 0.998786 0.0252297 0 433 0.999397 0.0177992 0 871
+0.05 20000 1 0.45 SUP_x_HET Weighted 2.47951e-07 2.86301e-06 1 433 7.90392e-07 1.39694e-05 1 1000
