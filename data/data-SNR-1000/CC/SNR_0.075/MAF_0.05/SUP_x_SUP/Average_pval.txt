@@ -1,0 +1,6 @@
+SNR Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.075 SUP_x_SUP Additive 2.73912e-11 1.38639e-10 1 28 5.89997e-10 9.41475e-09 1 991
+0.075 SUP_x_SUP Codominant 2.59264e-10 1.17252e-09 1 28 2.50325e-10 1.15309e-09 1 29
+0.075 SUP_x_SUP Dominant 3.75281e-12 9.28468e-12 1 28 8.83665e-10 1.50563e-08 1 991
+0.075 SUP_x_SUP Recessive 1 0 0 28 1 0 0 738
+0.075 SUP_x_SUP Weighted 1.09616e-11 3.37519e-11 1 28 1.05739e-08 3.0654e-07 1 993

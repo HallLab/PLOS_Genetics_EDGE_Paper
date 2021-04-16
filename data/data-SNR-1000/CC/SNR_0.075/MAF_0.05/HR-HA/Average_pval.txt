@@ -1,0 +1,6 @@
+SNR Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.075 HR-HA Additive 0.0138113 0 1 1 0.0413272 0.0658377 0.696721 122
+0.075 HR-HA Codominant 0.155844 0 0 1 0.155844 0 0 1
+0.075 HR-HA Dominant 0.0250541 0 1 1 0.00992342 0.0143434 0.991379 116
+0.075 HR-HA Recessive 1 0 0 1 1 0 0 27
+0.075 HR-HA Weighted 0.000319122 0 1 1 0.166452 0.24725 0.544872 156
