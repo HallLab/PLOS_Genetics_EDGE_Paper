@@ -1,0 +1,6 @@
+SNR Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.10 Hyp Additive 2.87777e-12 3.71205e-11 1 990 2.84899e-12 3.69355e-11 1 1000
+0.10 Hyp Codominant 1.35838e-10 1.69694e-09 1 990 1.35838e-10 1.69694e-09 1 990
+0.10 Hyp Dominant 2.39161e-08 5.38114e-07 1 990 2.3677e-08 5.35422e-07 1 1000
+0.10 Hyp Recessive 0.00738562 0.0439464 0.971717 990 0.00738562 0.0439464 0.971717 990
+0.10 Hyp Weighted 1.08704e-10 2.3303e-09 1 990 1.07617e-10 2.31864e-09 1 1000

@@ -1,0 +1,6 @@
+SNR Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.10 RHyp Additive 6.48076e-12 1.58185e-10 1 994 6.44188e-12 1.5771e-10 1 1000
+0.10 RHyp Codominant 2.74506e-10 6.25356e-09 1 994 2.74506e-10 6.25356e-09 1 994
+0.10 RHyp Dominant 5.11092e-08 8.78612e-07 1 994 5.08025e-08 8.75981e-07 1 1000
+0.10 RHyp Recessive 0.00881208 0.0538345 0.967807 994 0.00881208 0.0538345 0.967807 994
+0.10 RHyp Weighted 2.50704e-09 4.08961e-08 1 994 2.492e-09 4.07737e-08 1 1000
