@@ -1,0 +1,6 @@
+SNR Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.10 HR-HR Additive 2.0649e-08 2.66204e-07 1 999 2.06284e-08 2.66072e-07 1 1000
+0.10 HR-HR Codominant 2.60279e-10 4.73351e-09 1 999 2.60279e-10 4.73351e-09 1 999
+0.10 HR-HR Dominant 2.84194e-12 4.95758e-11 1 999 2.8391e-12 4.95511e-11 1 1000
+0.10 HR-HR Recessive 0.377394 0.294041 0.147147 999 0.377394 0.294041 0.147147 999
+0.10 HR-HR Weighted 1.11158e-11 2.42907e-10 1 999 1.11047e-11 2.42785e-10 1 1000

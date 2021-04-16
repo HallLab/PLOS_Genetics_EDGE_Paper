@@ -1,0 +1,6 @@
+SNR Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.10 HET-HET Additive 8.74584e-09 9.76625e-08 1 420 1.12648e-07 2.13813e-06 1 1000
+0.10 HET-HET Codominant 1.75049e-10 2.80964e-09 1 420 1.74221e-10 2.803e-09 1 422
+0.10 HET-HET Dominant 1.41797e-10 2.46553e-09 1 420 1.32745e-10 2.20532e-09 1 1000
+0.10 HET-HET Recessive 0.996472 0.0446901 0 420 0.996267 0.0437752 0 815
+0.10 HET-HET Weighted 3.677e-10 5.82396e-09 1 420 1.67264e-10 3.79817e-09 1 1000

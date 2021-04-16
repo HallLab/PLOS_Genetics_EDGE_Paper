@@ -1,0 +1,6 @@
+SNR Model Encoding Avg_pval SE_pval Power num_conv Avg_pval_indiv SE_pval_indiv Power_indiv num_conv_indiv
+0.10 XOR Additive 1.44931e-06 1.48153e-05 1 339 2.38144e-05 0.000380452 1 1000
+0.10 XOR Codominant 0.0265513 0.16076 0.973451 339 0.0308155 0.172808 0.969188 357
+0.10 XOR Dominant 6.08395e-07 7.05798e-06 1 339 1.36923e-05 0.000221487 1 1000
+0.10 XOR Recessive 1 0 0 339 1 0 0 664
+0.10 XOR Weighted 7.83594e-07 7.38754e-06 1 339 5.477e-05 0.00089952 1 999
